@@ -129,8 +129,19 @@
             <div class="bg-white border border-slate-200/80 rounded-2xl overflow-hidden shadow-sm">
                 
                 <!-- Table Controls Header -->
-                <div class="p-5 border-b border-slate-200/80 flex justify-between items-center bg-slate-50/50">
-                    <h3 class="font-extrabold text-base text-slate-800 tracking-tight">Daftar Submisi Pengajuan</h3>
+                <div class="p-5 border-b border-slate-200/80 flex flex-wrap justify-between items-center bg-slate-50/50 gap-4">
+                    <div class="flex items-center gap-3">
+                        <h3 class="font-extrabold text-base text-slate-800 tracking-tight">Daftar Submisi Pengajuan</h3>
+                        
+                        <!-- Bulk Delete Button (hidden by default) -->
+                        <button type="button" id="btn-bulk-delete" onclick="submitBulkDelete()" class="hidden items-center gap-1.5 px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white font-extrabold text-xs rounded-full shadow-sm transition active:scale-95">
+                            <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                            </svg>
+                            Hapus Terpilih (<span id="selected-count">0</span>)
+                        </button>
+                    </div>
+                    
                     <span class="text-xs text-slate-500 font-bold bg-slate-100 border border-slate-200/60 px-3 py-1 rounded-full">
                         Halaman {{ $pengajuans->currentPage() }} dari {{ $pengajuans->lastPage() }}
                     </span>
@@ -140,17 +151,26 @@
                     <table class="w-full text-left border-collapse">
                         <thead>
                             <tr class="border-b border-slate-200 bg-slate-50/70 text-slate-500 text-[10px] uppercase tracking-widest font-bold">
+                                <th class="py-3.5 px-6 text-center w-12">
+                                    <input type="checkbox" id="select-all" class="rounded border-slate-300 text-[#000B7E] focus:ring-[#000B7E]">
+                                </th>
                                 <th class="py-3.5 px-6">Tanggal Masuk</th>
                                 <th class="py-3.5 px-6">Identitas Pendaftar</th>
                                 <th class="py-3.5 px-6">Nomor HP & WhatsApp</th>
                                 <th class="py-3.5 px-6">Pekerjaan & Status</th>
                                 <th class="py-3.5 px-6">Media Sosial</th>
                                 <th class="py-3.5 px-6 text-center">Verifikasi Pembayaran</th>
+                                <th class="py-3.5 px-6 text-center">Aksi</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-slate-100 text-slate-700 text-sm">
                             @forelse($pengajuans as $pengajuan)
                                 <tr class="hover:bg-slate-50/40 transition duration-100">
+                                    <!-- Bulk Select Checkbox -->
+                                    <td class="py-4 px-6 text-center w-12">
+                                        <input type="checkbox" value="{{ $pengajuan->id }}" class="row-checkbox rounded border-slate-300 text-[#000B7E] focus:ring-[#000B7E]">
+                                    </td>
+
                                     <!-- Tanggal Masuk -->
                                     <td class="py-4 px-6">
                                         <span class="text-xs font-bold text-slate-600 block">{{ $pengajuan->created_at->format('d M Y') }}</span>
@@ -225,10 +245,33 @@
                                             Lihat Bukti
                                         </button>
                                     </td>
+
+                                    <!-- Action / Buttons -->
+                                    <td class="py-4 px-6 text-center">
+                                        <div class="inline-flex items-center justify-center gap-1">
+                                            <!-- Edit Button -->
+                                            <a href="{{ route('pengajuan.admin.edit', $pengajuan->id) }}" class="inline-flex items-center justify-center p-2 text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-full transition duration-100 shadow-none border border-transparent hover:border-blue-100 active:scale-95" title="Edit Data">
+                                                <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                                </svg>
+                                            </a>
+
+                                            <!-- Delete Button -->
+                                            <form action="{{ route('pengajuan.admin.destroy', $pengajuan->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data pendaftar {{ $pengajuan->nama_lengkap }}?')">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="inline-flex items-center justify-center p-2 text-rose-600 hover:text-rose-800 hover:bg-rose-50 rounded-full transition duration-100 shadow-none border border-transparent hover:border-rose-100 active:scale-95" title="Hapus Data">
+                                                    <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                                    </svg>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="6" class="py-12 text-center text-slate-400 italic font-medium">
+                                    <td colspan="8" class="py-12 text-center text-slate-400 italic font-medium">
                                         Belum ada data pengajuan awal yang masuk ke database.
                                     </td>
                                 </tr>
@@ -282,7 +325,12 @@
         </div>
     </div>
 
-    <!-- Script for Premium Image Pop-up -->
+    <!-- Hidden Bulk Delete Form -->
+    <form id="bulk-delete-form" action="{{ route('pengajuan.admin.bulk-destroy') }}" method="POST" class="hidden">
+        @csrf
+    </form>
+
+    <!-- Script for Premium Image Pop-up & Bulk Actions -->
     <script>
         function openImageModal(imgSrc) {
             const modal = document.getElementById('image-modal');
@@ -301,11 +349,77 @@
 
         function closeImageModal() {
             const modal = document.getElementById('image-modal');
+            const previewImg = document.getElementById('modal-preview-image');
             modal.classList.add('opacity-0');
             modal.firstElementChild.classList.add('scale-95');
             setTimeout(() => {
                 modal.classList.add('hidden');
+                previewImg.src = ''; // Clear image src to avoid flashing previous image on next open
             }, 300);
+        }
+
+        // --- SELECT ALL & BULK ACTIONS LOGIC ---
+        const selectAllCheckbox = document.getElementById('select-all');
+        const rowCheckboxes = document.querySelectorAll('.row-checkbox');
+        const btnBulkDelete = document.getElementById('btn-bulk-delete');
+        const selectedCountSpan = document.getElementById('selected-count');
+
+        if (selectAllCheckbox) {
+            selectAllCheckbox.addEventListener('change', function() {
+                rowCheckboxes.forEach(cb => {
+                    cb.checked = selectAllCheckbox.checked;
+                });
+                updateBulkDeleteButton();
+            });
+        }
+
+        rowCheckboxes.forEach(cb => {
+            cb.addEventListener('change', function() {
+                // If one checkbox is unchecked, uncheck select-all
+                const allChecked = Array.from(rowCheckboxes).every(c => c.checked);
+                if (selectAllCheckbox) {
+                    selectAllCheckbox.checked = allChecked;
+                }
+                updateBulkDeleteButton();
+            });
+        });
+
+        function updateBulkDeleteButton() {
+            const checkedCount = Array.from(rowCheckboxes).filter(c => c.checked).length;
+            if (selectedCountSpan) {
+                selectedCountSpan.textContent = checkedCount;
+            }
+
+            if (checkedCount > 0) {
+                btnBulkDelete.classList.remove('hidden');
+                btnBulkDelete.classList.add('inline-flex');
+            } else {
+                btnBulkDelete.classList.add('hidden');
+                btnBulkDelete.classList.remove('inline-flex');
+            }
+        }
+
+        function submitBulkDelete() {
+            const checkedBoxes = Array.from(rowCheckboxes).filter(c => c.checked);
+            if (checkedBoxes.length === 0) return;
+
+            if (confirm(`Apakah Anda yakin ingin menghapus ${checkedBoxes.length} data pendaftar terpilih?`)) {
+                const bulkForm = document.getElementById('bulk-delete-form');
+                
+                // Clear any existing hidden fields first
+                bulkForm.querySelectorAll('input[name="ids[]"]').forEach(el => el.remove());
+
+                // Append selected IDs
+                checkedBoxes.forEach(cb => {
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = 'ids[]';
+                    input.value = cb.value;
+                    bulkForm.appendChild(input);
+                });
+
+                bulkForm.submit();
+            }
         }
     </script>
 </x-app-layout>

@@ -46,7 +46,8 @@ class PengajuanController extends Controller
 
         if ($request->hasFile('bukti_setor')) {
             $file = $request->file('bukti_setor');
-            $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+            $nextId = (Pengajuan::max('id') ?? 0) + 1;
+            $filename = sprintf("PAXP%03d.%s", $nextId, $file->getClientOriginalExtension());
             // Simpan langsung ke public/uploads/bukti_setor
             $file->move(public_path('uploads/bukti_setor'), $filename);
             $pengajuan->bukti_setor = 'uploads/bukti_setor/' . $filename;
@@ -112,7 +113,8 @@ class PengajuanController extends Controller
 
         if ($request->hasFile('bukti_setor')) {
             $file = $request->file('bukti_setor');
-            $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+            $nextId = (Pengajuan::max('id') ?? 0) + 1;
+            $filename = sprintf("PAXP%03d.%s", $nextId, $file->getClientOriginalExtension());
             $file->move(public_path('uploads/bukti_setor'), $filename);
             $pengajuan->bukti_setor = 'uploads/bukti_setor/' . $filename;
         } else {
@@ -155,17 +157,23 @@ class PengajuanController extends Controller
                 // Generate a professional code based on ID, e.g., PAXP001
                 $kodeBukti = sprintf("PAXP%03d", $pengajuan->id);
 
+                // Format dates and clean social media handles
+                $tglMasuk = $pengajuan->created_at->format('d-m-Y H:i') . ' WIB';
+                $tglLahir = \Carbon\Carbon::parse($pengajuan->tgl_lahir)->format('d-m-Y');
+                $igHandle = $pengajuan->alamat_ig ? ltrim($pengajuan->alamat_ig, '@') : '-';
+                $tiktokHandle = $pengajuan->alamat_tiktok ? ltrim($pengajuan->alamat_tiktok, '@') : '-';
+
                 fputcsv($file, [
                     $pengajuan->id,
-                    $pengajuan->created_at->format('Y-m-d H:i:s'),
+                    $tglMasuk,
                     $pengajuan->nama_lengkap,
                     $pengajuan->email,
                     '="' . $pengajuan->no_hp . '"', // Force text format in Excel
-                    $pengajuan->tgl_lahir,
+                    $tglLahir,
                     $pengajuan->pekerjaan,
                     $pengajuan->status_pernikahan,
-                    $pengajuan->alamat_ig ?? '-',
-                    $pengajuan->alamat_tiktok ?? '-',
+                    $igHandle,
+                    $tiktokHandle,
                     $kodeBukti
                 ]);
             }
@@ -174,5 +182,104 @@ class PengajuanController extends Controller
         };
 
         return response()->stream($callback, 200, $headers);
+    }
+
+    /**
+     * Hapus data pengajuan.
+     */
+    public function destroy(Pengajuan $pengajuan)
+    {
+        // Hapus file bukti setor jika ada dan bukan logo default
+        if ($pengajuan->bukti_setor && $pengajuan->bukti_setor !== 'logo/Logo.png') {
+            $filePath = public_path($pengajuan->bukti_setor);
+            if (file_exists($filePath)) {
+                @unlink($filePath);
+            }
+        }
+
+        $pengajuan->delete();
+
+        return redirect()->route('dashboard')->with('success', 'Data pendaftar berhasil dihapus!');
+    }
+
+    /**
+     * Tampilkan form edit data pendaftar.
+     */
+    public function edit(Pengajuan $pengajuan)
+    {
+        return view('pengajuan.admin-edit', compact('pengajuan'));
+    }
+
+    /**
+     * Update data pendaftar.
+     */
+    public function update(Request $request, Pengajuan $pengajuan)
+    {
+        $request->validate([
+            'nama_lengkap' => 'required|string|max:255',
+            'tgl_lahir' => 'required|date',
+            'no_hp' => 'required|string|max:20',
+            'email' => 'required|email|max:255',
+            'pekerjaan' => 'required|string|max:255',
+            'status_pernikahan' => 'required|string|in:Menikah,Belum Menikah',
+            'alamat_ig' => 'nullable|string|max:255',
+            'alamat_tiktok' => 'nullable|string|max:255',
+            'bukti_setor' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120',
+        ]);
+
+        $pengajuan->nama_lengkap = $request->nama_lengkap;
+        $pengajuan->tgl_lahir = $request->tgl_lahir;
+        $pengajuan->no_hp = $request->no_hp;
+        $pengajuan->email = $request->email;
+        $pengajuan->pekerjaan = $request->pekerjaan;
+        $pengajuan->status_pernikahan = $request->status_pernikahan;
+        $pengajuan->alamat_ig = $request->alamat_ig;
+        $pengajuan->alamat_tiktok = $request->alamat_tiktok;
+
+        if ($request->hasFile('bukti_setor')) {
+            // Hapus file bukti setor lama jika ada dan bukan logo default
+            if ($pengajuan->bukti_setor && $pengajuan->bukti_setor !== 'logo/Logo.png') {
+                $oldFilePath = public_path($pengajuan->bukti_setor);
+                if (file_exists($oldFilePath)) {
+                    @unlink($oldFilePath);
+                }
+            }
+
+            $file = $request->file('bukti_setor');
+            $filename = sprintf("PAXP%03d.%s", $pengajuan->id, $file->getClientOriginalExtension());
+            $file->move(public_path('uploads/bukti_setor'), $filename);
+            $pengajuan->bukti_setor = 'uploads/bukti_setor/' . $filename;
+        }
+
+        $pengajuan->save();
+
+        return redirect()->route('dashboard')->with('success', 'Data pendaftar berhasil diperbarui!');
+    }
+
+    /**
+     * Hapus beberapa data pengajuan sekaligus (Bulk Delete).
+     */
+    public function bulkDestroy(Request $request)
+    {
+        $ids = $request->input('ids', []);
+        
+        if (empty($ids)) {
+            return redirect()->route('dashboard')->with('error', 'Pilih minimal satu data untuk dihapus!');
+        }
+
+        $pengajuans = Pengajuan::whereIn('id', $ids)->get();
+
+        foreach ($pengajuans as $pengajuan) {
+            // Hapus file bukti setor jika ada dan bukan logo default
+            if ($pengajuan->bukti_setor && $pengajuan->bukti_setor !== 'logo/Logo.png') {
+                $filePath = public_path($pengajuan->bukti_setor);
+                if (file_exists($filePath)) {
+                    @unlink($filePath);
+                }
+            }
+            $pengajuan->delete();
+        }
+
+        return redirect()->route('dashboard')->with('success', count($ids) . ' data pendaftar berhasil dihapus sekaligus!');
     }
 }

@@ -243,14 +243,7 @@
             </div>
 
             <!-- Card Bottom Bar (Exactly matching the light blue footer design) -->
-            <div class="bg-[#e6f0fa] border-t border-slate-200/60 px-8 py-6 flex flex-col sm:flex-row justify-between items-center gap-4">
-                <div class="text-left space-y-1">
-                    <div class="text-sm text-slate-700 font-medium">
-                        Biaya Investasi: <span class="line-through text-slate-400">Rp 120.000</span> <strong class="text-slate-900 font-extrabold text-base">Rp 100.000</strong> <span class="text-xs text-slate-500 font-bold">/ pax</span>
-                    </div>
-                    <!-- Removed WhatsApp/Email instruction text -->
-                </div>
-
+            <div class="bg-[#e6f0fa] border-t border-slate-200/60 px-8 py-6 flex justify-end">
                 <!-- Pill styled Submit Button -->
                 <button type="submit"
                     class="w-full sm:w-auto px-8 py-3.5 bg-[#000B7E] hover:bg-[#000966] text-white font-extrabold text-xs tracking-wider uppercase rounded-full transition duration-150 inline-flex items-center justify-center gap-2 shadow-sm">

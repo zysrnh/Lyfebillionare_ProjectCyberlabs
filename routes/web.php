@@ -29,6 +29,16 @@ Route::middleware('auth')->group(function () {
     
     // Admin Export Excel (CSV)
     Route::get('/admin/pengajuan/export', [PengajuanController::class, 'exportExcel'])->name('pengajuan.admin.export');
+    
+    // Admin Delete submission
+    Route::delete('/admin/pengajuan/{pengajuan}', [PengajuanController::class, 'destroy'])->name('pengajuan.admin.destroy');
+
+    // Admin Edit & Update submission
+    Route::get('/admin/pengajuan/{pengajuan}/edit', [PengajuanController::class, 'edit'])->name('pengajuan.admin.edit');
+    Route::put('/admin/pengajuan/{pengajuan}', [PengajuanController::class, 'update'])->name('pengajuan.admin.update');
+
+    // Admin Bulk Delete submissions
+    Route::post('/admin/pengajuan/bulk-delete', [PengajuanController::class, 'bulkDestroy'])->name('pengajuan.admin.bulk-destroy');
 });
 
 require __DIR__.'/auth.php';
