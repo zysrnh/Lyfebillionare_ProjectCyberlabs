@@ -22,6 +22,13 @@ Route::middleware('auth')->group(function () {
     
     // Admin / Auth user view submissions
     Route::get('/admin/pengajuan', [PengajuanController::class, 'index'])->name('pengajuan.index');
+    
+    // Admin Manual Create routes
+    Route::get('/admin/pengajuan/tambah', [PengajuanController::class, 'adminCreate'])->name('pengajuan.admin.create');
+    Route::post('/admin/pengajuan/tambah', [PengajuanController::class, 'adminStore'])->name('pengajuan.admin.store');
+    
+    // Admin Export Excel (CSV)
+    Route::get('/admin/pengajuan/export', [PengajuanController::class, 'exportExcel'])->name('pengajuan.admin.export');
 });
 
 require __DIR__.'/auth.php';

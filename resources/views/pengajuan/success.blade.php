@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pendaftaran Berhasil - LyfeBillionaires</title>
     
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="{{ asset('ico/AhaConvert_Logo.ico') }}" type="image/x-icon">
+    
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Outfit from Google Fonts -->
@@ -17,6 +20,36 @@
             /* Cyberlabs clean dot tech pattern */
             background-image: radial-gradient(#b1c4d9 1.5px, transparent 1.5px);
             background-size: 28px 28px;
+        }
+
+        /* Premium Intro Animations */
+        @keyframes cardEntrance {
+            0% {
+                opacity: 0;
+                transform: translateY(40px) scale(0.96);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        @keyframes fadeInUp {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-card {
+            animation: cardEntrance 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        .animate-fade-in-1 {
+            opacity: 0;
+            animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards;
         }
     </style>
 </head>
@@ -33,12 +66,13 @@
 
     <!-- Main Content Section -->
     <main class="flex-grow flex items-center justify-center py-12 px-4">
-        <div class="max-w-md w-full bg-white border border-slate-200 rounded-[32px] p-8 sm:p-10 shadow-lg text-center space-y-6">
+        <div class="max-w-md w-full bg-white border border-slate-200 rounded-[32px] p-8 sm:p-10 shadow-lg text-center space-y-6 animate-card">
 
-            <!-- Logo -->
-            <div class="flex justify-center">
-                <img src="{{ asset('logo/Logo.png') }}" class="h-16 w-auto object-contain" alt="LyfeBillionaires Logo">
-            </div>
+            <div class="space-y-6 animate-fade-in-1">
+                <!-- Logo -->
+                <div class="flex justify-center">
+                    <img src="{{ asset('logo/Logo.png') }}" class="h-16 w-auto object-contain" alt="LyfeBillionaires Logo">
+                </div>
 
             <!-- Very Simple Message -->
             <div class="space-y-2">
@@ -57,6 +91,7 @@
                 </a>
             </div>
 
+            </div>
         </div>
     </main>
 

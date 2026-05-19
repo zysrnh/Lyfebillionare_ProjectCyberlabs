@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Form Pengajuan - LyfeBillionaires</title>
     
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="{{ asset('ico/AhaConvert_Logo.ico') }}" type="image/x-icon">
+    
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Outfit from Google Fonts -->
@@ -35,6 +38,36 @@
         .custom-input:not(:placeholder-shown) {
             background-color: #f7f9fc; /* Soft active state background from image */
         }
+
+        /* Premium Intro Animations */
+        @keyframes cardEntrance {
+            0% {
+                opacity: 0;
+                transform: translateY(40px) scale(0.97);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        @keyframes fadeInUp {
+            0% {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-card {
+            animation: cardEntrance 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        .animate-fade-in-1 {
+            opacity: 0;
+            animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.15s forwards;
+        }
     </style>
 </head>
 <body class="text-slate-800 min-h-screen flex flex-col justify-between selection:bg-[#000B7E] selection:text-white">
@@ -50,17 +83,20 @@
 
     <!-- Main Content Form Section -->
     <main class="flex-grow flex items-center justify-center py-10 px-4">
-        <div class="max-w-2xl w-full bg-white border border-slate-200/80 rounded-[32px] shadow-lg overflow-hidden relative">
+        <div class="max-w-2xl w-full bg-white border border-slate-200/80 rounded-[32px] shadow-lg overflow-hidden relative animate-card">
             
             <!-- Top Close X Button (Just decorative to match image layout) -->
-            <a href="/" class="absolute right-6 top-6 text-slate-400 hover:text-slate-600 transition">
+            <a href="/" class="absolute right-6 top-6 text-slate-400 hover:text-slate-600 transition z-20">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                 </svg>
             </a>
 
-            <!-- Form Content Box -->
-            <div class="p-8 md:p-10 space-y-8">
+            <form action="{{ route('pengajuan.store') }}" method="POST" enctype="multipart/form-data" id="pengajuan-form">
+                @csrf
+
+                <!-- Form Content Box -->
+                <div class="p-8 md:p-10 space-y-8 animate-fade-in-1">
                 
                 <!-- Styled Logo Badge (Exactly matching the second image) -->
                 <div class="flex justify-start">
@@ -87,8 +123,7 @@
                     </div>
                 @endif
 
-                <form action="{{ route('pengajuan.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6" id="pengajuan-form">
-                    @csrf
+                <div class="space-y-6">
 
                     <!-- Selection Toggles (Player 1 / 2 style from image) for Status Pernikahan -->
                     <div class="space-y-2">
@@ -189,7 +224,7 @@
                                     <p class="text-sm font-semibold text-slate-700 mb-0.5">Klik untuk upload bukti setor</p>
                                     <p class="text-[11px] text-slate-400">JPEG, PNG, atau WEBP (Maksimal 5MB)</p>
                                 </div>
-                                <input type="file" name="bukti_setor" id="bukti_setor" required class="hidden" accept="image/*" onchange="previewFile()">
+                                <input type="file" name="bukti_setor" id="bukti_setor" class="hidden" accept="image/*" onchange="previewFile()">
                             </label>
                         </div>
                         
@@ -204,7 +239,7 @@
                             <span id="file-size" class="text-slate-500 font-mono">1.2 MB</span>
                         </div>
                     </div>
-                </form>
+                </div>
             </div>
 
             <!-- Card Bottom Bar (Exactly matching the light blue footer design) -->
@@ -217,7 +252,7 @@
                 </div>
 
                 <!-- Pill styled Submit Button -->
-                <button type="submit" form="pengajuan-form"
+                <button type="submit"
                     class="w-full sm:w-auto px-8 py-3.5 bg-[#000B7E] hover:bg-[#000966] text-white font-extrabold text-xs tracking-wider uppercase rounded-full transition duration-150 inline-flex items-center justify-center gap-2 shadow-sm">
                     Kirim Pengajuan
                     <!-- Arrow Icon -->
@@ -227,6 +262,7 @@
                 </button>
             </div>
 
+            </form>
         </div>
     </main>
 
@@ -260,6 +296,77 @@
                 fileInfo.classList.add('hidden');
             }
         }
+
+        // Custom Validation Alert Triggers
+        document.getElementById('pengajuan-form').addEventListener('submit', function(e) {
+            let nama = document.getElementById('nama_lengkap').value.trim();
+            let email = document.getElementById('email').value.trim();
+            let no_hp = document.getElementById('no_hp').value.trim();
+            let tgl_lahir = document.getElementById('tgl_lahir').value.trim();
+            let pekerjaan = document.getElementById('pekerjaan').value.trim();
+            let fileInput = document.getElementById('bukti_setor');
+
+            let errors = [];
+            if (!nama) errors.push("Nama Lengkap wajib diisi");
+            if (!email) errors.push("Alamat Email wajib diisi");
+            if (!no_hp) errors.push("Nomor HP / WhatsApp wajib diisi");
+            if (!tgl_lahir) errors.push("Tanggal Lahir wajib diisi");
+            if (!pekerjaan) errors.push("Pekerjaan wajib diisi");
+            if (fileInput.files.length === 0) errors.push("Bukti Transfer Setor wajib di-upload");
+
+            if (errors.length > 0) {
+                e.preventDefault();
+                showValidationAlert(errors);
+            }
+        });
+
+        function showValidationAlert(errors) {
+            const alertModal = document.getElementById('validation-alert');
+            const errorsList = document.getElementById('validation-errors-list');
+            
+            // Populate errors
+            errorsList.innerHTML = '<p class="font-extrabold text-slate-700 mb-2">Silakan perbaiki kesalahan berikut:</p><ul class="list-disc pl-5 space-y-1.5 font-semibold text-slate-600">' + 
+                errors.map(err => `<li>${err}</li>`).join('') + 
+                '</ul>';
+            
+            // Reveal alert modal beautifully
+            alertModal.classList.remove('hidden');
+            setTimeout(() => {
+                alertModal.classList.remove('opacity-0');
+                alertModal.firstElementChild.classList.remove('scale-95');
+            }, 10);
+        }
+
+        function closeValidationAlert() {
+            const alertModal = document.getElementById('validation-alert');
+            alertModal.classList.add('opacity-0');
+            alertModal.firstElementChild.classList.add('scale-95');
+            setTimeout(() => {
+                alertModal.classList.add('hidden');
+            }, 300);
+        }
     </script>
+
+    <!-- Beautiful Premium Alert Modal -->
+    <div id="validation-alert" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-sm hidden opacity-0 transition-all duration-300">
+        <div class="max-w-md w-full bg-white rounded-[24px] p-6 shadow-2xl border border-slate-200/80 transform scale-95 transition-all duration-300 space-y-5">
+            <div class="flex items-center gap-3 text-rose-600">
+                <div class="p-2.5 bg-rose-50 rounded-full border border-rose-100 shrink-0">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                    </svg>
+                </div>
+                <h3 class="font-extrabold text-lg text-slate-900 tracking-tight">Validasi Pendaftaran</h3>
+            </div>
+            
+            <div class="text-xs leading-relaxed" id="validation-errors-list">
+                <!-- Errors list injected dynamically -->
+            </div>
+
+            <button onclick="closeValidationAlert()" class="w-full py-3.5 bg-[#000B7E] hover:bg-[#000966] text-white text-xs font-extrabold rounded-full transition duration-150 uppercase tracking-wider shadow-sm active:scale-98">
+                Mengerti
+            </button>
+        </div>
+    </div>
 </body>
 </html>
