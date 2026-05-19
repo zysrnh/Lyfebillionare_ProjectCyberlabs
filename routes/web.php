@@ -13,9 +13,7 @@ Route::get('/pengajuan', [PengajuanController::class, 'create'])->name('pengajua
 Route::post('/pengajuan', [PengajuanController::class, 'store'])->name('pengajuan.store');
 Route::get('/pengajuan/sukses', [PengajuanController::class, 'success'])->name('pengajuan.success');
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [PengajuanController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

@@ -71,6 +71,6 @@ class PengajuanController extends Controller
     public function index()
     {
         $pengajuans = Pengajuan::latest()->paginate(10);
-        return view('pengajuan.index', compact('pengajuans'));
+        return view('dashboard', compact('pengajuans'));
     }
 }
