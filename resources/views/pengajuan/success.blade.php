@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pendaftaran Berhasil - LyfeBillionaires</title>
+    <title>Pendaftaran Berhasil - LyFeBillionaires</title>
     
     <!-- Favicon -->
     <link rel="shortcut icon" href="{{ asset('ico/AhaConvert_Logo.ico') }}" type="image/x-icon">
@@ -71,7 +71,7 @@
             <div class="space-y-6 animate-fade-in-1">
                 <!-- Logo -->
                 <div class="flex justify-center">
-                    <img src="{{ asset('logo/Logo.png') }}" class="h-16 w-auto object-contain" alt="LyfeBillionaires Logo">
+                    <img src="{{ asset('logo/Logo.png') }}" class="h-16 w-auto object-contain" alt="LyFeBillionaires Logo">
                 </div>
 
             <!-- Very Simple Message -->
@@ -97,7 +97,7 @@
 
     <!-- Footer -->
     <footer class="max-w-md mx-auto w-full text-center py-6 text-[10px] sm:text-xs text-slate-600 font-medium">
-        <p>&copy; {{ date('Y') }} LyfeBillionares. Hak Cipta Dilindungi.</p>
+        <p>&copy; {{ date('Y') }} LyFeBillionaires. Hak Cipta Dilindungi.</p>
     </footer>
 
 </body>

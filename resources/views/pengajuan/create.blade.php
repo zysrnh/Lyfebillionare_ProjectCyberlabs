@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Form Pengajuan - LyfeBillionaires</title>
+    <title>Form Pengajuan - LyFeBillionaires</title>
     
     <!-- Favicon -->
     <link rel="shortcut icon" href="{{ asset('ico/AhaConvert_Logo.ico') }}" type="image/x-icon">
@@ -210,11 +210,32 @@
                     </div>
 
                     <!-- Bukti Setor Pembayaran -->
-                    <div class="space-y-2 pt-2">
-                        <label class="text-xs font-bold text-slate-400 uppercase tracking-wider block">Upload Bukti Transfer Setor (Rp 100.000 / pax) *</label>
+                    <div class="space-y-3 pt-2">
+                        <div class="flex flex-col gap-2">
+                            <label class="text-xs font-bold text-slate-400 uppercase tracking-wider block">Upload Bukti Transfer Setor *</label>
+                            
+                            <!-- Transfer Information Box -->
+                            <div class="p-3.5 bg-[#f0f6fc] border border-[#d3e5f7] rounded-xl text-xs">
+                                <ul class="space-y-2 text-slate-600">
+                                    <li><span class="font-bold text-[#000B7E] inline-block w-20">Investasi</span> <span class="font-medium text-slate-700">: IDR 100.000 /pax</span> <span class="text-slate-500">(Include: Snacks & Drink)</span></li>
+                                    <li class="flex items-center flex-wrap gap-1">
+                                        <span class="font-bold text-[#000B7E] inline-block w-20">Transfer ke</span>
+                                        <span class="font-medium text-slate-700 mr-0.5">: BCA</span>
+                                        <span class="font-mono font-bold text-emerald-600 bg-white px-1.5 py-0.5 rounded shadow-sm border border-slate-200/60 tracking-wider text-[13px]" id="norek-bca">4661166881</span>
+                                        <button type="button" onclick="copyNorek()" class="p-1.5 ml-0.5 bg-white border border-slate-200 rounded-md text-slate-400 hover:text-[#000B7E] hover:border-[#000B7E] hover:bg-blue-50 transition-all duration-150 shadow-sm" title="Salin Nomor Rekening">
+                                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                                            </svg>
+                                        </button>
+                                        <span class="text-slate-500 ml-1">(a/n Wanda Juwita)</span>
+                                    </li>
+                                    <li><span class="font-bold text-[#000B7E] inline-block w-20">Berita</span> <span class="font-medium text-slate-700">:</span> <span class="italic text-slate-500">Tuliskan Nama Peserta</span></li>
+                                </ul>
+                            </div>
+                        </div>
                         
-                        <div class="flex items-center justify-center w-full">
-                            <label class="flex flex-col items-center justify-center w-full h-36 border border-slate-200 hover:border-[#000B7E]/40 bg-slate-50 hover:bg-slate-100 rounded-2xl cursor-pointer transition duration-150 group">
+                        <div class="flex items-center justify-center w-full mt-1">
+                            <label for="bukti_setor" class="flex flex-col items-center justify-center w-full h-36 border border-slate-200 hover:border-[#000B7E]/40 bg-slate-50 hover:bg-slate-100 rounded-2xl cursor-pointer transition duration-150 group">
                                 <div class="flex flex-col items-center justify-center pt-4 pb-4 text-center px-4">
                                     <div class="p-2.5 bg-blue-50 rounded-full text-[#000B7E] mb-2 border border-blue-100">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -224,7 +245,7 @@
                                     <p class="text-sm font-semibold text-slate-700 mb-0.5">Klik untuk upload bukti setor</p>
                                     <p class="text-[11px] text-slate-400">JPEG, PNG, atau WEBP (Maksimal 5MB)</p>
                                 </div>
-                                <input type="file" name="bukti_setor" id="bukti_setor" class="hidden" accept="image/*" onchange="previewFile()">
+                                <input type="file" name="bukti_setor" id="bukti_setor" class="sr-only" accept="image/*" onchange="previewFile()">
                             </label>
                         </div>
                         
@@ -261,11 +282,28 @@
 
     <!-- Footer -->
     <footer class="max-w-4xl mx-auto w-full text-center py-6 text-xs text-slate-600 font-medium">
-        <p>&copy; {{ date('Y') }} LyfeBillionares. Hak Cipta Dilindungi Undang-Undang.</p>
+        <p>&copy; {{ date('Y') }} LyFeBillionaires. Hak Cipta Dilindungi Undang-Undang.</p>
     </footer>
 
     <!-- Script for Dynamic Preview -->
     <script>
+        function copyNorek() {
+            navigator.clipboard.writeText('4661166881').then(function() {
+                // Change button style temporarily to show success
+                const btn = event.currentTarget;
+                const originalHtml = btn.innerHTML;
+                btn.innerHTML = '<svg class="w-3.5 h-3.5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>';
+                btn.classList.add('border-emerald-500', 'bg-emerald-50');
+                
+                setTimeout(() => {
+                    btn.innerHTML = originalHtml;
+                    btn.classList.remove('border-emerald-500', 'bg-emerald-50');
+                }, 2000);
+            }).catch(function(err) {
+                console.error('Failed to copy text: ', err);
+                alert('Gagal menyalin nomor rekening.');
+            });
+        }
         function previewFile() {
             const fileInput = document.getElementById('bukti_setor');
             const fileInfo = document.getElementById('file-info');
@@ -319,7 +357,7 @@
             
             // Populate errors
             errorsList.innerHTML = '<p class="font-extrabold text-slate-700 mb-2">Silakan perbaiki kesalahan berikut:</p><ul class="list-disc pl-5 space-y-1.5 font-semibold text-slate-600">' + 
-                errors.map(err => `<li>${err}</li>`).join('') + 
+                errors.map(err => <li> + err + </li>).join('') + 
                 '</ul>';
             
             // Reveal alert modal beautifully

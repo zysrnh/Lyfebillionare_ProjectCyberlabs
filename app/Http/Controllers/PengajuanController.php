@@ -57,6 +57,47 @@ class PengajuanController extends Controller
 
         return redirect()->route('pengajuan.success')->with('success', 'Pengajuan awal Anda berhasil dikirim!');
     }
+    /**
+     * Tampilkan halaman form pengajuan (Gratis A/B Testing).
+     */
+    public function createGratis()
+    {
+        return view('pengajuan.create-gratis');
+    }
+
+    /**
+     * Simpan data pengajuan baru (Gratis).
+     */
+    public function storeGratis(Request $request)
+    {
+        $request->validate([
+            'nama_lengkap' => 'required|string|max:255',
+            'tgl_lahir' => 'required|date',
+            'no_hp' => 'required|string|max:20',
+            'email' => 'required|email|max:255',
+            'pekerjaan' => 'required|string|max:255',
+            'status_pernikahan' => 'required|string|in:Menikah,Belum Menikah',
+            'alamat_ig' => 'nullable|string|max:255',
+            'alamat_tiktok' => 'nullable|string|max:255',
+        ]);
+
+        $pengajuan = new Pengajuan();
+        $pengajuan->nama_lengkap = $request->nama_lengkap;
+        $pengajuan->tgl_lahir = $request->tgl_lahir;
+        $pengajuan->no_hp = $request->no_hp;
+        $pengajuan->email = $request->email;
+        $pengajuan->pekerjaan = $request->pekerjaan;
+        $pengajuan->status_pernikahan = $request->status_pernikahan;
+        $pengajuan->alamat_ig = $request->alamat_ig;
+        $pengajuan->alamat_tiktok = $request->alamat_tiktok;
+        $pengajuan->user_id = Auth::id(); // Link ke user jika login
+        $pengajuan->bukti_setor = 'logo/Logo.png';
+
+        $pengajuan->save();
+
+        return redirect()->route('pengajuan.success')->with('success', 'Pengajuan awal Anda berhasil dikirim!');
+    }
+
 
     /**
      * Halaman sukses pengajuan.

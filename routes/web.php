@@ -8,10 +8,16 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/eventexitplan', function () {
+    return view('welcome-gratis');
+});
+
 // Form Pengajuan (Public)
 Route::get('/pengajuan', [PengajuanController::class, 'create'])->name('pengajuan.create');
 Route::post('/pengajuan', [PengajuanController::class, 'store'])->name('pengajuan.store');
 Route::get('/pengajuan/sukses', [PengajuanController::class, 'success'])->name('pengajuan.success');
+Route::get('/exitplan', [PengajuanController::class, 'createGratis'])->name('pengajuan.create-gratis');
+Route::post('/exitplan', [PengajuanController::class, 'storeGratis'])->name('pengajuan.store-gratis');
 
 Route::get('/dashboard', [PengajuanController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 

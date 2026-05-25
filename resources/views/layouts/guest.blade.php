@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>Masuk - LyfeBillionaires</title>
+    <title>Masuk - LyFeBillionaires</title>
 
     <!-- Favicon -->
     <link rel="shortcut icon" href="{{ asset('ico/AhaConvert_Logo.ico') }}" type="image/x-icon">
@@ -75,7 +75,7 @@
                 <!-- Logo Centered -->
                 <div class="flex justify-center pt-2">
                     <a href="/">
-                        <img src="{{ asset('logo/Logo.png') }}" class="h-20 w-auto object-contain" alt="LyfeBillionaires Logo">
+                        <img src="{{ asset('logo/Logo.png') }}" class="h-20 w-auto object-contain" alt="LyFeBillionaires Logo">
                     </a>
                 </div>
 
@@ -90,7 +90,7 @@
 
     <!-- Footer -->
     <footer class="max-w-md mx-auto w-full text-center py-6 text-[10px] sm:text-xs text-slate-600 font-medium">
-        <p>&copy; {{ date('Y') }} LyfeBillionares. Hak Cipta Dilindungi.</p>
+        <p>&copy; {{ date('Y') }} LyFeBillionaires. Hak Cipta Dilindungi.</p>
     </footer>
 
 </body>

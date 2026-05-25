@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daftar Pengajuan Masuk - LyfeBillionaire</title>
+    <title>Daftar Pengajuan Masuk - LyFeBillionaires</title>
     
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -32,7 +32,7 @@
                     <span class="font-extrabold text-slate-950 text-xl tracking-tighter">L</span>
                 </div>
                 <div>
-                    <span class="font-bold text-lg tracking-wide bg-gradient-to-r from-white via-slate-200 to-emerald-400 bg-clip-text text-transparent">LyfeBillionaire</span>
+                    <span class="font-bold text-lg tracking-wide bg-gradient-to-r from-white via-slate-200 to-emerald-400 bg-clip-text text-transparent">LyFeBillionaires</span>
                     <span class="text-xs block text-slate-400 -mt-1">Admin Panel</span>
                 </div>
             </div>
@@ -172,7 +172,7 @@
     <!-- Footer -->
     <footer class="border-t border-slate-900 bg-slate-950 py-6 text-center text-xs text-slate-600">
         <div class="max-w-7xl mx-auto px-4">
-            <p>&copy; {{ date('Y') }} LyfeBillionare. Hak Cipta Dilindungi Undang-Undang.</p>
+            <p>&copy; {{ date('Y') }} LyFeBillionaires. Hak Cipta Dilindungi Undang-Undang.</p>
         </div>
     </footer>
 

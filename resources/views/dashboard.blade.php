@@ -26,7 +26,7 @@
                 <h2 class="font-extrabold text-2xl text-slate-900 tracking-tight leading-none">
                     {{ __('Kelola Pengajuan Masuk') }}
                 </h2>
-                <p class="text-xs text-slate-500 mt-1.5 font-medium">Sistem monitoring dan pengelolaan data pendaftar LyfeBillionaires.</p>
+                <p class="text-xs text-slate-500 mt-1.5 font-medium">Sistem monitoring dan pengelolaan data pendaftar LyFeBillionaires.</p>
             </div>
             
             <div class="flex flex-wrap items-center gap-3 w-full lg:w-auto">

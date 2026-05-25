@@ -105,7 +105,7 @@
 
             <!-- Start Button (Flat Navy Pill) -->
             <div class="pt-2 animate-fade-in-2">
-                <a href="{{ route('pengajuan.create') }}" 
+                <a href="{{ route('pengajuan.create-gratis') }}" 
                    class="w-full py-4 bg-[#000B7E] hover:bg-[#000966] text-white font-extrabold text-xs sm:text-sm uppercase tracking-wider rounded-full transition-all duration-150 inline-flex items-center justify-center gap-2 shadow-sm active:scale-[0.98]">
                     Mulai Pengisian
                     <!-- Arrow Icon -->
